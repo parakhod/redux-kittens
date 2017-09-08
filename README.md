@@ -8,11 +8,11 @@ Also every KITten already have the built-in logger, so no need to add some other
 __npm install -s redux-kittens__
 
 ## Usage
-[Timer kitten](#timer_kitten) - timer middleware
-[Delay kitten](#delay_kitten) - delay middleware
-[Superagent kitten](#superagent_kitten) - http request middleware
-[Socket.io kitten](#socket_io_kitten) - Socket.io client middleware
-[Promise kitten](#promise_kitten) - promise middleware
+- [Timer kitten](#timer-kitten) - timer middleware
+- [Delay kitten](#delay-kitten) - delay middleware
+- [Superagent kitten](#superagent-kitten) - http request middleware
+- [Socket.io kitten](#socketio-kitten) - Socket.io client middleware
+- [Promise kitten](#promise-kitten) - promise middleware
 
 
 ### Global settings
