@@ -1,6 +1,7 @@
 # Redux KITtens
 
-With this Redux middleware kit, you can make http requests, create and manage websockets, timer, promises etc. with your Redux just creating the actions with simple objects as a payload. 
+Redux middleware kit
+Simple way to create http requests, create and manage websockets, timer, promises etc. - just pass the plain objects objects as a payload.
 Also every KITten already have the built-in logger, so no need to add some other logging middleware.
 
 ## Installation
@@ -12,6 +13,7 @@ __npm install -s redux-kittens__
 - [Delay kitten](#delay-kitten) - delay middleware
 - [Superagent kitten](#superagent-kitten) - http request middleware
 - [Socket.io kitten](#socketio-kitten) - Socket.io client middleware
+- [Storage kitten](#storage-kitten) - localStorage and AsyncStorage middleware
 - [Promise kitten](#promise-kitten) - promise middleware
 
 
@@ -23,6 +25,7 @@ import {
   timerKitten,
   superagentKitten,
   socketIoKitten,
+  storageKitten,
   promiseKitten
 } from 'redux-kittens';
 
@@ -39,15 +42,14 @@ const createStoreWithMiddleware = applyMiddleware(
 const store = createStoreWithMiddleware(reducer);
 ```
 
-
-### Timer kitten
 ______
+### Timer kitten
 `timerKitten(options)`
 
 Payload should be a plain object with properties:
 - `use: 'timer'`
 - `method` - `'start'` or `'stop'`
-- `name` - timer's name, optional (you can have several timers with the different names)
+- `id` - timer's ID, optional (you can have several timers with the different IDs)
 - `interval` - interval in __ms__
 #### Start timer
 ```
@@ -56,7 +58,7 @@ store.dispatch({
   payload: {
       use: 'timer',
       method: 'start',
-      name: 'my_timer_number_one',
+      id: 'my_timer_number_one', 
       interval: 1000 //one second      
     }
   });
@@ -64,8 +66,9 @@ store.dispatch({
 In the reducer you will get:
 `{ meta: { sequence: 'start' }}`
 and then
-`{ meta: { sequence: 'timer', iteration: NN /* number of iteration */ }}`
-on every timer's call
+`{ meta: { sequence: 'tick', iteration: NN /* number of iteration */ }}`
+on every timer's call.
+If the timer with this name is already started this action call will be ignored.
 #### Stop timer
 ```
 ...
@@ -77,11 +80,19 @@ on every timer's call
 ```
 In the reducer you will get:
 `{ meta: { sequence: 'stop' }}`
+#### Restart timer
+```
+...
+  payload: {
+      use: 'timer',
+      method: 'restart',
+      name: 'my_timer_number_one',
+    }
+```
 #### [options]
 `enableLog` - set to `true` to enable console logging
-
-### Delay kitten
 ______
+### Delay kitten
 `delayKitten(options)`
 
 Payload should be a plain object with properties:
@@ -93,9 +104,8 @@ Payload should be a plain object with properties:
 `{ meta: { sequence: 'complete' }}` - at the end of the interval
 #### [options]
 `enableLog` - set to `true` to enable console logging
-
-### Superagent kitten
 ______
+### Superagent kitten
 `superagentKitten(options)`
 
 Middleware for the async requests via __http__ and __https__. It uses promisified [superagent](https://visionmedia.github.io/superagent/) library.
@@ -114,7 +124,7 @@ Payload should be a plain object with properties:
 #### Create request
 ```
 store.dispatch({ 
-  type: 'TIMER_CALL', //or whatever you want
+  type: 'GET_REMOTE_URL', //or whatever you want
   payload: {
       use: 'request',
       method: 'GET',
@@ -134,9 +144,8 @@ store.dispatch({
 #### Authentication
 Middleware __automatically__ gets the value of the store `session.token` (supported both plain JS object and  __Immutable__ reducers), it will be send in the `'Authorization'` header field.
 If you want to manually specify the `'Authorization'` header value, use the `getToken` parameter in the options
-
-### Socket.io kitten
 ______
+### Socket.io kitten
 `socketIoKitten(options)`
 
 Middleware for socket.io. It uses [socket.io-client](https://github.com/socketio/socket.io-client) library.
@@ -174,9 +183,28 @@ store.dispatch({
 #### Authentication
 Middleware __automatically__ gets the value of the store `session.token` (supported both plain JS object and  __Immutable__ reducers), it will be send in the `'Authorization'` header field.
 If you want to manually specify the `'Authorization'` header value, use the `getToken` parameter in the options
-
-### Promise kitten
 ______
+### Storage kitten
+`storageKitten(options)`
+
+Middleware for local storage in browser apps and AsyncStorage in ReactNative (will be supported soon)
+
+Payload should be a plain object with properties:
+- `use: 'storage'`
+- `method` - `get`, `set` or `remove`
+- `data` - key name, or array with the names of the keys or object with keys and values
+
+If you need to delete the value you can either use `remove` method or pass `null` as a value for the key in the `set`, this will work too
+
+#### Reducer events
+- `{ meta: { sequence: 'begin' }}` - rigth after the action call (__only in ReactNative!__)
+- `{ meta: { sequence: 'complete' }payload: { ...yourData }}` - data fetched
+- `{ meta: { sequence: 'error' }}` - some error occurred
+
+#### [options]
+`enableLog` - set to `true` to enable console logging
+______
+### Promise kitten
 `promiseKitten(options)`
 
 Just pass the Promise as a payload, and it will be handled with this middleware

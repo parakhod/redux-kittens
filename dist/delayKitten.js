@@ -22,7 +22,7 @@ var delayKitten = function delayKitten() {
 
 
           setTimeout(function () {
-            enableLog && !meta.disableLog && console.log('%c\u21EA ' + type, 'color: navy; font-weight: bold', 'Delay end');
+            enableLog && !meta.disableLog && console.log('%c\u23F1 ' + type, 'color: navy; font-weight: bold', 'Delay end');
 
             return next(_extends({}, action, {
               meta: _extends({}, meta, {
@@ -30,7 +30,7 @@ var delayKitten = function delayKitten() {
               }) }));
           }, payload.delay || 1000);
 
-          enableLog && !meta.disableLog && console.log('%c\u21EA ' + type, 'color: green; font-weight: bold', 'Delay start');
+          enableLog && !meta.disableLog && console.log('%c\u23F1 ' + type, 'color: green; font-weight: bold', 'Delay start');
 
           return next(_extends({}, action, {
             meta: _extends({}, meta, {

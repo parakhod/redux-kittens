@@ -1,4 +1,15 @@
-const delayKitten = ({ 
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+
+var storageKitten = require('./browserStorageKitten');
+
+/*
+
+const storageKitten = ({ 
     enableLog = false
   } = {}) => 
   () => 
@@ -14,7 +25,7 @@ const delayKitten = ({
 
       setTimeout(() => {
         enableLog && !meta.disableLog && console.log(
-          `%c⏱ ${type}`,
+          `%c⇪ ${type}`,
           'color: navy; font-weight: bold',
           'Delay end');
 
@@ -27,7 +38,7 @@ const delayKitten = ({
       }, payload.delay || 1000);
 
       enableLog && !meta.disableLog && console.log(
-        `%c⏱ ${type}`,
+        `%c⇪ ${type}`,
         'color: green; font-weight: bold',
         'Delay start');      
 
@@ -41,6 +52,6 @@ const delayKitten = ({
     else {
       next(action);
     }
-}
+}*/
 
-export default delayKitten;
+exports.default = storageKitten;
