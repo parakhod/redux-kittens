@@ -30,16 +30,16 @@ import {
 } from 'redux-kittens';
 
 const options = {enableLog: true};
-const createStoreWithMiddleware = applyMiddleware(
-  thunk,
+
+const store = applyMiddleware(
   delayKitten(options),
   timerKitten(options),
   superagentKitten(options),
   socketIoKitten(options),
+  storageKitten(options),
   promiseKitten(options)
-)(createStore);
+)(createStore)(reducer);
 
-const store = createStoreWithMiddleware(reducer);
 ```
 
 ______
@@ -90,7 +90,7 @@ In the reducer you will get:
     }
 ```
 #### [options]
-`enableLog` - set to `true` to enable console logging
+- `enableLog` - set to `true` to enable console logging
 ______
 ### Delay kitten
 `delayKitten(options)`
@@ -100,8 +100,8 @@ Payload should be a plain object with properties:
 - `delay` - interval in __ms__
 
 #### Reducer events:
-`{ meta: { sequence: 'begin' }}` - after right the delay creation
-`{ meta: { sequence: 'complete' }}` - at the end of the interval
+- `{ meta: { sequence: 'begin' }}` - after right the delay creation
+- `{ meta: { sequence: 'complete' }}` - at the end of the interval
 #### [options]
 `enableLog` - set to `true` to enable console logging
 ______
@@ -118,9 +118,11 @@ Payload should be a plain object with properties:
 - `data` - request payload
 - `accept`
 - `boundary`
-- `formFields` - if you want to send the form, just pass the object with the form fields here
+- `sendAsForm` - set to `true` if you want to send the `data` as a form
 - `contentType`
-- `reportProgress` - set it to `true` if you want to receive the events about the operation progress, for example during the uploading of the large file
+- `files` - pass here the `FileList` object if you want to upload the files, the form will be created automatically,  content of the `data` will be added as a form fields
+- `allowedFileTypes` - array, MIME file types for upload, or just `image` or `video` - all the other files will be ignored
+- `reportProgress` - set it to `true` if you want to receive the events about the operation progress, for example during the uploading of the large files
 #### Create request
 ```
 store.dispatch({ 
@@ -138,8 +140,8 @@ store.dispatch({
 - `{ meta: { sequence: 'error' }, payload: { ...ErrorData }}` - error during the request
 
 #### [options]
-`enableLog` - set to `true` to enable console logging
-`getToken` - optional function, provide auth token here, `getToken: () => yourCustomToken`
+- `enableLog` - set to `true` to enable console logging
+- `getToken` - optional function, provide auth token here, `getToken: () => yourCustomToken`
 
 #### Authentication
 Middleware __automatically__ gets the value of the store `session.token` (supported both plain JS object and  __Immutable__ reducers), it will be send in the `'Authorization'` header field.
@@ -176,9 +178,9 @@ store.dispatch({
 - `{ meta: { sequence: YOUR_EVENT_NAME }}` - when socket receives `YOUR_EVENT_NAME` from the server. `YOUR_EVENT_NAME` __should be__ in the `listeners` list
 
 #### [options]
-`enableLog` - set to `true` to enable console logging
-`getToken` - optional function, provide auth token here, `getToken: () => yourCustomToken`
-`socketOptions` - look the [socket.io-client documentation](https://github.com/socketio/socket.io-client/blob/master/docs/API.md#new-managerurl-options)
+- `enableLog` - set to `true` to enable console logging
+- `getToken` - optional function, provide auth token here, `getToken: () => yourCustomToken`
+- `socketOptions` - look the [socket.io-client documentation](https://github.com/socketio/socket.io-client/blob/master/docs/API.md#new-managerurl-options)
 
 #### Authentication
 Middleware __automatically__ gets the value of the store `session.token` (supported both plain JS object and  __Immutable__ reducers), it will be send in the `'Authorization'` header field.
@@ -198,11 +200,11 @@ If you need to delete the value you can either use `remove` method or pass `null
 
 #### Reducer events
 - `{ meta: { sequence: 'begin' }}` - rigth after the action call (__only in ReactNative!__)
-- `{ meta: { sequence: 'complete' }payload: { ...yourData }}` - data fetched
+- `{ meta: { sequence: 'complete' }, payload: { ...yourData }}` - data fetched
 - `{ meta: { sequence: 'error' }}` - some error occurred
 
 #### [options]
-`enableLog` - set to `true` to enable console logging
+- `enableLog` - set to `true` to enable console logging
 ______
 ### Promise kitten
 `promiseKitten(options)`
@@ -215,4 +217,4 @@ Just pass the Promise as a payload, and it will be handled with this middleware
 - `{ meta: { sequence: 'error' }}` - if the promise was rejected
 
 #### [options]
-`enableLog` - set to `true` to enable console logging
+- `enableLog` - set to `true` to enable console logging

@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _bluebird = require('bluebird');
@@ -17,6 +19,10 @@ var _superagentPromise2 = _interopRequireDefault(_superagentPromise);
 var _superagent = require('superagent');
 
 var _superagent2 = _interopRequireDefault(_superagent);
+
+var _createUploadForm = require('./utils/createUploadForm');
+
+var _createUploadForm2 = _interopRequireDefault(_createUploadForm);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -43,7 +49,10 @@ var superagentKitten = function superagentKitten() {
               query = payload.query,
               accept = payload.accept,
               boundary = payload.boundary,
-              formFields = payload.formFields,
+              _payload$sendAsForm = payload.sendAsForm,
+              sendAsForm = _payload$sendAsForm === undefined ? false : _payload$sendAsForm,
+              files = payload.files,
+              allowedFileTypes = payload.allowedFileTypes,
               contentType = payload.contentType,
               reportProgress = payload.reportProgress;
 
@@ -81,6 +90,8 @@ var superagentKitten = function superagentKitten() {
             }));
           };
 
+          var additionalMeta = {};
+
           var requestObject = request(method, url);
 
           if (token) {
@@ -91,28 +102,36 @@ var superagentKitten = function superagentKitten() {
             requestObject.set('Accept', accept);
           }
 
-          if (contentType) {
-            requestObject.set('Content-Type', contentType);
-          }
-
           if (reportProgress) {
             requestObject.on('progress', function (progress) {
               return handleProgress(progress);
             });
           }
 
-          if (data) {
-            requestObject.send(data);
+          if (files) {
+            var f = (0, _createUploadForm2.default)(files, data, Array.isArray(allowedFileTypes) ? allowedFileTypes : typeof allowedFileTypes === 'string' ? [allowedFileTypes] : null);
+
+            Object.keys(f.formData).forEach(function (field) {
+              requestObject.attach(field, f.formData[field]);
+            });
+
+            additionalMeta = { files: f.files };
+          } else if (data && (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object') {
+            if (sendAsForm) {
+              Object.keys(data).forEach(function (field) {
+                requestObject.attach(field, data[field]);
+              });
+            } else {
+              requestObject.send(data);
+            }
           }
 
           if (query) {
             requestObject.query(query);
           }
 
-          if (formFields) {
-            Object.keys(formFields).forEach(function (field) {
-              requestObject.attach(field, formFields[field]);
-            });
+          if (contentType) {
+            requestObject.set('Content-Type', contentType);
           }
 
           requestObject.then(function (response) {
@@ -135,13 +154,13 @@ var superagentKitten = function superagentKitten() {
           });
 
           next(_extends({}, action, {
-            meta: _extends({}, meta, {
+            meta: _extends({}, meta, additionalMeta, {
               sequence: 'begin'
             }) }));
 
           if (enableLog && !meta.disableLog) {
             var messageText = method ? method + ' ' + url : payload;
-            console.log('%c\u21EA ' + type, 'color: green; font-weight: bold', messageText, data || (formFields ? Object.keys(formFields) : ''));
+            console.log('%c\u21EA ' + type, 'color: green; font-weight: bold', messageText, sendAsForm && (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' ? Object.keys(data) : data);
           }
         } else {
           next(action);

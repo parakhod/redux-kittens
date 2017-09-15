@@ -1,6 +1,6 @@
 {
   "name": "redux-kittens",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Redux middleware kit for http requests, websockets, timers etc",
   "main": "dist/index.js",
   "scripts": {
