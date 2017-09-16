@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.promiseKitten = exports.storageKitten = exports.socketIoKitten = exports.superagentKitten = exports.timerKitten = exports.delayKitten = undefined;
+exports.promiseKitten = exports.storageKitten = exports.socketIoKitten = exports.superagentKitten = exports.timerKitten = exports.delayKitten = exports.reduxKittens = undefined;
 
 var _delayKitten = require('./delayKitten');
 
@@ -31,8 +31,11 @@ var _browserStorageKitten2 = _interopRequireDefault(_browserStorageKitten);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-console.log('sc', _browserStorageKitten2.default);
+var reduxKittens = function reduxKittens(options) {
+  return [(0, _delayKitten2.default)(options), (0, _timerKitten2.default)(options), (0, _superagentKitten2.default)(options), (0, _socketIoKitten2.default)(options), (0, _promiseKitten2.default)(options), (0, _browserStorageKitten2.default)(options)];
+};
 
+exports.reduxKittens = reduxKittens;
 exports.delayKitten = _delayKitten2.default;
 exports.timerKitten = _timerKitten2.default;
 exports.superagentKitten = _superagentKitten2.default;
@@ -40,6 +43,8 @@ exports.socketIoKitten = _socketIoKitten2.default;
 exports.storageKitten = _browserStorageKitten2.default;
 exports.promiseKitten = _promiseKitten2.default;
 exports.default = {
+  reduxKittens: reduxKittens,
+
   delayKitten: _delayKitten2.default,
   timerKitten: _timerKitten2.default,
   superagentKitten: _superagentKitten2.default,

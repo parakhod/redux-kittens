@@ -21,17 +21,16 @@ __npm install -s redux-kittens__
 
 ```
 import {
-  delayKitten,
-  timerKitten,
-  superagentKitten,
-  socketIoKitten,
-  storageKitten,
-  promiseKitten
+  reduxKittens, /* all in one initialization */
+
+  delayKitten, ... /* or add only kittens you need */
 } from 'redux-kittens';
 
 const options = {enableLog: true};
 
-const store = applyMiddleware(
+const store = applyMiddleware( ...reduxKittens(options) )(createStore)(reducer); // Apply all the middlewares
+   OR
+const store = applyMiddleware( /* one by one */
   delayKitten(options),
   timerKitten(options),
   superagentKitten(options),
