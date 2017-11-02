@@ -20,7 +20,7 @@ var promiseKitten = function promiseKitten() {
               meta = _action$meta === undefined ? {} : _action$meta;
 
 
-          var name = meta.name || 'Promise';
+          var name = meta.name || action.type;
 
           var handleError = function handleError(error) {
             if (enableLog && !meta.disableLog) {

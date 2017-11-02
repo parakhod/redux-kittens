@@ -8,14 +8,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _bluebird = require('bluebird');
-
-var _bluebird2 = _interopRequireDefault(_bluebird);
-
-var _superagentPromise = require('superagent-promise');
-
-var _superagentPromise2 = _interopRequireDefault(_superagentPromise);
-
 var _superagent = require('superagent');
 
 var _superagent2 = _interopRequireDefault(_superagent);
@@ -25,8 +17,6 @@ var _createUploadForm = require('./utils/createUploadForm');
 var _createUploadForm2 = _interopRequireDefault(_createUploadForm);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var request = (0, _superagentPromise2.default)(_superagent2.default, _bluebird2.default);
 
 var superagentKitten = function superagentKitten() {
   var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
@@ -80,7 +70,7 @@ var superagentKitten = function superagentKitten() {
             }
 
             return next(_extends({}, action, {
-              request: request,
+              request: _superagent2.default,
               payload: {
                 progress: progress.percent ? progress.percent / 100 : 1.0
               },
@@ -92,7 +82,7 @@ var superagentKitten = function superagentKitten() {
 
           var additionalMeta = {};
 
-          var requestObject = request(method, url);
+          var requestObject = (0, _superagent2.default)(method, url);
 
           if (token) {
             requestObject.set('Authorization', token);
@@ -134,9 +124,7 @@ var superagentKitten = function superagentKitten() {
             requestObject.set('Content-Type', contentType);
           }
 
-          requestObject.then(function (response) {
-            var error = response.error;
-
+          requestObject.end(function (error, response) {
             if (error) {
               return handleError(error);
             } else {
@@ -149,8 +137,6 @@ var superagentKitten = function superagentKitten() {
                 })
               }));
             }
-          }).catch(function (error) {
-            return handleError(error);
           });
 
           next(_extends({}, action, {
@@ -160,7 +146,7 @@ var superagentKitten = function superagentKitten() {
 
           if (enableLog && !meta.disableLog) {
             var messageText = method ? method + ' ' + url : payload;
-            console.log('%c\u21EA ' + type, 'color: green; font-weight: bold', messageText, sendAsForm && (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' ? Object.keys(data) : data);
+            console.log('%c\u21EA ' + type, 'color: green; font-weight: bold', messageText, sendAsForm && (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' ? Object.keys(data) : data || query || '');
           }
         } else {
           next(action);

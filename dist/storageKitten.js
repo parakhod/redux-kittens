@@ -4,54 +4,68 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var storageKitten = require('./browserStorageKitten');
+var _catBox = require('cat-box');
 
-/*
+var storageKitten = function storageKitten() {
+  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      _ref$enableLog = _ref.enableLog,
+      enableLog = _ref$enableLog === undefined ? false : _ref$enableLog;
 
-const storageKitten = ({ 
-    enableLog = false
-  } = {}) => 
-  () => 
-  next => 
-  action => {
-    if (action.payload && action.payload.use === 'delay') {
+  return function () {
+    return function (next) {
+      return function (action) {
+        if (action.payload && action.payload.use === 'storage') {
+          var payload = action.payload,
+              type = action.type,
+              _action$meta = action.meta,
+              meta = _action$meta === undefined ? {} : _action$meta;
+          var data = payload.data,
+              _payload$method = payload.method,
+              method = _payload$method === undefined ? 'get' : _payload$method;
 
-      const { 
-        payload, 
-        type,
-        meta = {} 
-      } = action;
 
-      setTimeout(() => {
-        enableLog && !meta.disableLog && console.log(
-          `%c⇪ ${type}`,
-          'color: navy; font-weight: bold',
-          'Delay end');
+          var methodName = method.toLowerCase();
 
-        return next({ 
-          ...action, 
-          meta: {
-            ...meta,
-            sequence: 'complete' 
-        }})
-      }, payload.delay || 1000);
+          var nextBegin = function nextBegin(v) {
+            enableLog && !meta.disableLog && console.log('%c\uD83D\uDCE6 ' + type + ' (' + method + ')', 'color: green; font-weight: bold', v);
 
-      enableLog && !meta.disableLog && console.log(
-        `%c⇪ ${type}`,
-        'color: green; font-weight: bold',
-        'Delay start');      
+            return next(_extends({}, action, {
+              payload: v,
+              meta: _extends({}, meta, {
+                sequence: 'begin'
+              }) }));
+          };
 
-      return next({ 
-        ...action, 
-        meta: {
-          ...meta, 
-          sequence: 'begin' 
-      }})
-    }
-    else {
-      next(action);
-    }
-}*/
+          var nextComplete = function nextComplete(v) {
+            enableLog && !meta.disableLog && console.log('%c\uD83D\uDCE6 ' + type + ' (' + method + ')', 'color: navy; font-weight: bold', v);
+
+            return next(_extends({}, action, {
+              payload: v,
+              meta: _extends({}, meta, {
+                sequence: 'complete'
+              }) }));
+          };
+
+          switch (methodName) {
+            case 'get':
+              var getData = (0, _catBox.storageGet)(data);
+              if (getData.then) {
+                nextBegin(data);
+                getData.then(function (v) {
+                  return nextComplete(v);
+                });
+              } else {
+                nextComplete(getData);
+              }
+          }
+        } else {
+          next(action);
+        }
+      };
+    };
+  };
+};
 
 exports.default = storageKitten;

@@ -1,11 +1,10 @@
 {
   "name": "redux-kittens",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Redux middleware kit for http requests, websockets, timers etc",
   "main": "dist/index.js",
   "scripts": {
-    "compile": "babel --stage 0 lib/ --out-dir dist/",
-    "demo": "node example"
+    "compile": "babel --stage 0 lib/ --out-dir dist/"
   },
   "repository": {
     "type": "git",
