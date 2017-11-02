@@ -1,6 +1,6 @@
 {
   "name": "redux-kittens",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Redux middleware kit for http requests, websockets, timers etc",
   "main": "dist/index.js",
   "scripts": {
@@ -32,9 +32,8 @@
   },
   "homepage": "https://github.com/parakhod/redux-kittens#readme",
   "dependencies": {
-    "bluebird": "^3.5.0",
+    "cat-box": "0.0.1",
     "socket.io-client": "^2.0.3",
-    "superagent": "^3.6.0",
-    "superagent-promise": "^1.1.0"
+    "superagent": "^3.6.0"
   }
 }
