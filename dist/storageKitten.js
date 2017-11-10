@@ -39,7 +39,7 @@ var storageKitten = function storageKitten() {
           };
 
           var nextComplete = function nextComplete(v) {
-            enableLog && !meta.disableLog && console.log('%c\uD83D\uDCE6 ' + type + ' (' + method + ')', 'color: navy; font-weight: bold', v);
+            enableLog && !meta.disableLog && console.log('%c\uD83D\uDCE6 ' + type + ' (' + method + ')', 'color: navy; font-weight: bold', methodName === 'get' ? v : '');
 
             return next(_extends({}, action, {
               payload: v,
@@ -48,17 +48,18 @@ var storageKitten = function storageKitten() {
               }) }));
           };
 
-          switch (methodName) {
-            case 'get':
-              var getData = (0, _catBox.storageGet)(data);
-              if (getData.then) {
-                nextBegin(data);
-                getData.then(function (v) {
-                  return nextComplete(v);
-                });
-              } else {
-                nextComplete(getData);
-              }
+          var storeAction = methodName === 'set' ? _catBox.storageSet : methodName === 'get' ? _catBox.storageGet : methodName === 'remove' ? _catBox.storageRemove : null;
+
+          if (typeof storeAction === 'function') {
+            var processData = storeAction(data);
+            if (processData && processData.then) {
+              nextBegin(data);
+              processData.then(function (v) {
+                return nextComplete(v);
+              });
+            } else {
+              nextComplete(processData);
+            }
           }
         } else {
           next(action);

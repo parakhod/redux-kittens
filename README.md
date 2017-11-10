@@ -188,12 +188,12 @@ ______
 ### Storage kitten
 `storageKitten(options)`
 
-Middleware for local storage in browser apps and AsyncStorage in ReactNative (will be supported soon)
+Middleware for local storage in browser apps and AsyncStorage in ReactNative
 
 Payload should be a plain object with properties:
 - `use: 'storage'`
 - `method` - `get`, `set` or `remove`
-- `data` - key name, or array with the names of the keys or object with keys and values
+- `data` - key name, or object with keys and values
 
 If you need to delete the value you can either use `remove` method or pass `null` as a value for the key in the `set`, this will work too
 
