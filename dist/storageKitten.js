@@ -52,13 +52,11 @@ var storageKitten = function storageKitten() {
 
           if (typeof storeAction === 'function') {
             var processData = storeAction(data);
-            if (processData && processData.then) {
+            if (processData) {
               nextBegin(data);
               processData.then(function (v) {
                 return nextComplete(v);
               });
-            } else {
-              nextComplete(processData);
             }
           }
         } else {
