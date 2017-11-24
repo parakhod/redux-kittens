@@ -1,4 +1,4 @@
-# Redux KITtens
+# Redux KITtens  🐾
 
 Redux middleware kit
 Simple way to create http requests, create and manage websockets, timer, promises etc. - just pass the plain objects objects as a payload.
@@ -42,7 +42,7 @@ const store = applyMiddleware( /* one by one */
 ```
 
 ______
-### Timer kitten
+### 🐱 Timer kitten
 `timerKitten(options)`
 
 Payload should be a plain object with properties:
@@ -91,7 +91,7 @@ In the reducer you will get:
 #### [options]
 - `enableLog` - set to `true` to enable console logging
 ______
-### Delay kitten
+### 🐱 Delay kitten
 `delayKitten(options)`
 
 Payload should be a plain object with properties:
@@ -104,7 +104,7 @@ Payload should be a plain object with properties:
 #### [options]
 `enableLog` - set to `true` to enable console logging
 ______
-### Superagent kitten
+### 🐱 Superagent kitten
 `superagentKitten(options)`
 
 Middleware for the async requests via __http__ and __https__. It uses promisified [superagent](https://visionmedia.github.io/superagent/) library.
@@ -146,7 +146,7 @@ store.dispatch({
 Middleware __automatically__ gets the value of the store `session.token` (supported both plain JS object and  __Immutable__ reducers), it will be send in the `'Authorization'` header field.
 If you want to manually specify the `'Authorization'` header value, use the `getToken` parameter in the options
 ______
-### Socket.io kitten
+### 🐱 Socket.io kitten
 `socketIoKitten(options)`
 
 Middleware for socket.io. It uses [socket.io-client](https://github.com/socketio/socket.io-client) library.
@@ -185,7 +185,7 @@ store.dispatch({
 Middleware __automatically__ gets the value of the store `session.token` (supported both plain JS object and  __Immutable__ reducers), it will be send in the `'Authorization'` header field.
 If you want to manually specify the `'Authorization'` header value, use the `getToken` parameter in the options
 ______
-### Storage kitten
+### 🐱 Storage kitten
 `storageKitten(options)`
 
 Middleware for local storage in browser apps and AsyncStorage in ReactNative
@@ -203,7 +203,7 @@ Payload should be a plain object with properties:
 #### [options]
 - `enableLog` - set to `true` to enable console logging
 ______
-### Promise kitten
+### 🐱 Promise kitten
 `promiseKitten(options)`
 
 Just pass the Promise as a payload, and it will be handled with this middleware
