@@ -108,9 +108,11 @@ var superagentKitten = function superagentKitten() {
             additionalMeta = { files: f.files };
           } else if (data && (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object') {
             if (sendAsForm) {
+              var fdata = new FormData();
               Object.keys(data).forEach(function (field) {
-                requestObject.attach(field, data[field]);
+                return fdata.append(field, data[field]);
               });
+              requestObject.send(fdata);
             } else {
               requestObject.send(data);
             }
