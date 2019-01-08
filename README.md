@@ -156,6 +156,7 @@ Payload should be a plain object with properties:
 - `url` 
 - `method` - `connect` or `disconnect`
 - `name` - socket name
+- `query` - query params for connection
 - `listeners: []` - array of listeners, `'connect'`, `'disconnect'`, custom event names
 #### Connect to server
 ```
@@ -166,6 +167,7 @@ store.dispatch({
     method: 'connect',
     name: 'someSocket',
     url: 'https://your.site/socket_io',
+    query: { id: 2 },
     listeners: ['connect', 'disconnect', YOUR_EVENT_NAME, ...]
   }
 });

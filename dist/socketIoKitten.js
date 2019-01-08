@@ -36,6 +36,8 @@ var socketIoKitten = function socketIoKitten() {
               url = payload.url,
               listeners = payload.listeners,
               target = payload.target,
+              _payload$query = payload.query,
+              query = _payload$query === undefined ? {} : _payload$query,
               data = payload.data;
 
 
@@ -53,15 +55,11 @@ var socketIoKitten = function socketIoKitten() {
 
               var token = typeof getToken === 'function' ? getToken() : state.session && state.session.token ? state.session.token : state.getIn && state.getIn(['session', 'token']);
 
-              var connectionOptions = token ? {
-                transportOptions: {
-                  polling: {
-                    extraHeaders: {
-                      'Authorization': token
-                    }
-                  }
-                }
-              } : {};
+              var tokenQuery = token ? { token: token } : {};
+
+              var connectionOptions = {
+                query: _extends({}, query, tokenQuery)
+              };
 
               sockets[name] = (0, _socket2.default)(url, _extends({}, connectionOptions, socketOptions));
 
